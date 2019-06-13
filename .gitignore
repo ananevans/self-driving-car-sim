@@ -22,3 +22,7 @@ IMG
 driving_log.csv
 Archive.zip
 sdc.app
+
+.vs/
+*.x86_64
+*_Data/**

@@ -189,11 +189,11 @@ public class UISystem : MonoSingleton<UISystem> {
 	// Update is called once per frame
 	void Update () {
 
-	    if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            //Do Menu Here
-            SceneManager.LoadScene("MenuScene");
-        }
+	    //if(Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    //Do Menu Here
+        //    SceneManager.LoadScene("MenuScene");
+        //}
 
         UpdateCarValues();
     }
