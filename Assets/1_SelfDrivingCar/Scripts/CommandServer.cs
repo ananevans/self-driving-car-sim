@@ -8,6 +8,7 @@ using System.Security.AccessControl;
 
 public class CommandServer : MonoBehaviour
 {
+    // The car that is being evaluated
 	public GameObject Car;
 	public Camera FrontFacingCamera;
 	private SocketIOComponent _socket;
@@ -53,20 +54,24 @@ public class CommandServer : MonoBehaviour
 	void OnOpen(SocketIOEvent obj)
 	{
 		Debug.Log("Connection Open");
-		point_path.OpenScript ();
+		//point_path.OpenScript ();
 		EmitTelemetry(obj);
 	}
 	void OnClose(SocketIOEvent obj)
 	{
 		Debug.Log("Connection Closed");
-		point_path.CloseScript ();
+		//point_path.CloseScript ();
 
 	}
 
 	// 
 	void onManual(SocketIOEvent obj)
 	{
-		EmitTelemetry (obj);
+        Debug.Log("onManual");
+
+        // TODO Error 
+
+		//EmitTelemetry (obj);
 	}
 
 	void Control(SocketIOEvent obj)

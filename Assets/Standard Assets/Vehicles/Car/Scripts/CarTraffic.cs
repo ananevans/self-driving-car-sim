@@ -54,6 +54,9 @@ namespace UnityStandardAssets.Vehicles.Car
 	{
 			foreach (GameObject car in cars) {
 				CarAIControl carAI = (CarAIControl)car.GetComponent (typeof(CarAIControl));
+
+                Debug.Log("FixedUpdate::Car " + carAI.name);
+
 				List<float> frenet_values = carAI.getThisFrenetFrame ();
 			}
 	}
@@ -64,9 +67,11 @@ namespace UnityStandardAssets.Vehicles.Car
 		foreach (GameObject car in cars) 
 		{
 			CarAIControl carAI = (CarAIControl) car.GetComponent(typeof(CarAIControl));
-			if (carAI.RegenerateCheck ()) {
-				//turn off the car and add it to a list
-				carAI.setStage();
+            Debug.Log("UpdateForward::Car " + carAI.name);
+            if (carAI.RegenerateCheck ()) {
+                    Debug.Log("UpdateForward::Car Deactivated " + carAI.name);
+                    //turn off the car and add it to a list
+                    carAI.setStage();
 				inactive_cars.Enqueue (car);
 			} 
 

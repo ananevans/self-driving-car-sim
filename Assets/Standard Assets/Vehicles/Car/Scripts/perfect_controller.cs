@@ -5,8 +5,8 @@ using UnityEngine;
 public class perfect_controller : MonoBehaviour {
 
 	private Rigidbody rb;
-	private Collider collider;
-	private Vector3 Offset = new Vector3 (0.3f, 0.0f, 0.0f);
+	//private Collider collider; // not actually used
+	//private Vector3 Offset = new Vector3 (0.3f, 0.0f, 0.0f);
 	//Frame rate is 50FPS so delta t is .02
 	//track points for the next second so 50 points in reference to global coordinates
 
@@ -21,16 +21,16 @@ public class perfect_controller : MonoBehaviour {
 	private bool simulator_process;
 	private bool background_process;
 	private bool server_process;
-	private bool script_running = false;
+	//private bool script_running = false;
 
 	// Use this for initialization
 	void Start () {
 		
 		rb = GetComponent<Rigidbody> (); 
-		collider = GetComponent<Collider> ();
+		//collider = GetComponent<Collider> ();
 		way_points = new List<GameObject> ();
 
-		x_points = new List<float> ();
+        x_points = new List<float> ();
 		y_points = new List<float> ();
 
 		//by default create 50 points
@@ -45,6 +45,7 @@ public class perfect_controller : MonoBehaviour {
 
 	public void setControlPath(List<float> x_set, List<float> y_set)
 	{
+        //TODO figure out how this works
 		//start at the point that closes to the car
 
 		//add more points if we need to
@@ -86,6 +87,7 @@ public class perfect_controller : MonoBehaviour {
 
 		if (!behind_path) 
 		{
+            // TODO Why does it remove the first point?
 			ProgressPath ();
 		}
 
@@ -247,12 +249,14 @@ public class perfect_controller : MonoBehaviour {
 
 
 	}
-	public void OpenScript()
-	{
-		script_running = true;
-	}
-	public void CloseScript()
-	{
-		script_running = false;
-	}
+
+
+	//public void OpenScript()
+	//{
+	//	script_running = true;
+	//}
+	//public void CloseScript()
+	//{
+	//	script_running = false;
+	//}
 }

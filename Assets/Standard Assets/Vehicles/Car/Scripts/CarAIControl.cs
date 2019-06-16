@@ -166,7 +166,9 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		public void Spawn(List<GameObject> cars)
 		{
-			int direction = 1;
+            Debug.Log("Spawn:: number of cars " + cars.Count);
+
+            int direction = 1;
 			if(!forward)
 			{
 				direction = -1;
