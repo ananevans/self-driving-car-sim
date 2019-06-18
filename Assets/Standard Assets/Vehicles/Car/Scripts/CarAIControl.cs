@@ -166,8 +166,6 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		public void Spawn(List<GameObject> cars)
 		{
-            Debug.Log("Spawn:: number of cars " + cars.Count);
-
             int direction = 1;
 			if(!forward)
 			{
@@ -246,7 +244,9 @@ namespace UnityStandardAssets.Vehicles.Car
 				}
 				m_Rigidbody.velocity = waypoints [compare_start].transform.forward * direction * m_CarController.MaxSpeed;
 				current_waypoint = ListIndex (compare_start);
-			}
+
+                Debug.Log("Spawn:: " + name + " at waypoint " + current_waypoint );
+            }
 
 			else
 			{

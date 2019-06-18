@@ -41,6 +41,7 @@ public class CommandServer : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+        //TODO Read configuration file
 		_socket = GameObject.Find("SocketIO").GetComponent<SocketIOComponent>();
 		_socket.On("open", OnOpen);
 		_socket.On("manual", onManual);
@@ -68,17 +69,15 @@ public class CommandServer : MonoBehaviour
 	void onManual(SocketIOEvent obj)
 	{
         Debug.Log("onManual");
-
-        // TODO Error 
-
-		//EmitTelemetry (obj);
+        // This is odd but if I comment the line below it stops working
+		EmitTelemetry (obj);
 	}
 
 	void Control(SocketIOEvent obj)
 	{
 		JSONObject jsonObject = obj.data;
 
-		//Debug.Log ("sending control");
+		Debug.Log ("Control");
 
 
 		var next_x = jsonObject.GetField ("next_x");
@@ -110,7 +109,7 @@ public class CommandServer : MonoBehaviour
 			// send only if it's not being manually driven
 			if ( !point_path.isServerProcess() ) {
 				_socket.Emit("telemetry", new JSONObject());
-				
+                Debug.Log("EmitTelemetry !point_path.isServerProcess()");
 
 			}
 			else {
@@ -175,11 +174,15 @@ public class CommandServer : MonoBehaviour
 
 				CarTraffic cars = (CarTraffic) Car.GetComponent(typeof(CarTraffic));
 				data["sensor_fusion"] = new JSONObject(cars.example_sensor_fusion());
-				
 
-				//data["steering_angle"] = new JSONObject(_carController.CurrentSteerAngle);
-				//data["throttle"] = new JSONObject(_carController.AccelInput);
-				//data["speed"] = new JSONObject(_carController.CurrentSpeed);
+
+                //data["steering_angle"] = new JSONObject(_carController.CurrentSteerAngle);
+                //data["throttle"] = new JSONObject(_carController.AccelInput);
+                //data["speed"] = new JSONObject(_carController.CurrentSpeed);
+
+
+                Debug.Log("EmitTelemetry " + data);
+
 				_socket.Emit("telemetry", new JSONObject(data));
 			}
 		});

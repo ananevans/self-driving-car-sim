@@ -250,6 +250,8 @@ namespace UnityStandardAssets.Vehicles.Car
         {
 			if (main_car) 
 			{
+                Debug.Log("FixedUpdate main_car");
+
 				//average over last frames
 				int time_steps = 10;
 
