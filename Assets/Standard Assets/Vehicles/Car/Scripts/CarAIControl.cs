@@ -53,22 +53,19 @@ namespace UnityStandardAssets.Vehicles.Car
         // what should the AI consider when accelerating/braking?
         [SerializeField] private bool m_Driving;
         // whether the AI is currently actively driving or stopped.
-		[SerializeField] private List<Transform> waypoints;
-
-		public GameObject front_sensor;
-		public List<GameObject> right_sensors;
-		public List<GameObject> left_sensors;
-
-		// controls the timing of lane changing
-		private int lane_change_time;
-
-        // 'target' the target object to aim for.
         [SerializeField] private bool m_StopWhenTargetReached;
         // should we stop driving when we reach the target?
         [SerializeField] private float m_ReachTargetThreshold = 2;
         // proximity to target to consider we 'reached' it, and stop driving.
 
-		//public Transform m_Start;
+        private List<Transform> waypoints;
+
+        [SerializeField] private GameObject front_sensor;
+        [SerializeField] private List<GameObject> right_sensors;
+        [SerializeField] private List<GameObject> left_sensors;
+
+		// controls the timing of lane changing
+		private int lane_change_time;
 
 		public GameObject mycar;
 
@@ -86,6 +83,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		public CarController follow_car;
 		// the car that we are looping with
+
 		public float MaxDistance;
 
 		//keep track of the waypoint from the list
@@ -99,8 +97,7 @@ namespace UnityStandardAssets.Vehicles.Car
 		public bool forward;
 
 		//use if your the main car
-		private bool autodrive;
-		public bool maincar;
+		public bool maincar = false;
 
 		//frenet coordinates
 		public float frenet_s = -1;
@@ -123,32 +120,28 @@ namespace UnityStandardAssets.Vehicles.Car
 		private float dist_eval = 0;
 		private float time_eval = 0;
 
-		private bool simulator_process;
-
 		private int lane0_clear = 0;
 		private int lane1_clear = 0;
 		private int lane2_clear = 0;
 
         private void Awake ()
         {
-			//PrintWaypoints ();
+            // initialize Waypoints
+            this.waypoints = new List<Transform>();
+            Transform waypointsGameObject =  GameObject.Find("Highway").transform.GetChild(0).GetChild(0);
+            for (int j = 0; j < waypointsGameObject.childCount; j++)
+            {
+                this.waypoints.Add(waypointsGameObject.GetChild(j));
+            }
+            // initialize follow_car
+            GameObject mainCarGameObject = GameObject.FindWithTag("MainCar");
+            follow_car = mainCarGameObject.GetComponent<CarController>();
 
-			//get max S
-			/*
-			var s = 0.0;
-			for (int i = 0; i < waypoints.Count-1; i++) 
-			{
-				s += (waypoints[i+1].transform.position - waypoints[i].transform.position).magnitude;
-			}
-			s += (waypoints[waypoints.Count-1].transform.position - waypoints[0].transform.position).magnitude;
-			Debug.Log ("Max S is " + s);
-			*/
-
-			staged = false;
+            staged = false;
 
 			// get the car controller reference
 			m_CarController = GetComponent<CarController> ();
-            
+
 			m_Rigidbody = GetComponent<Rigidbody> ();
 
 			// give the random perlin a random value
@@ -156,12 +149,6 @@ namespace UnityStandardAssets.Vehicles.Car
 
 
 			MaxDistance = 200;
-
-			autodrive = false;
-
-			//flag new data is ready to process
-			simulator_process = false;
-
         }
 
 		public void Spawn(List<GameObject> cars)
@@ -292,7 +279,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			float closestLen = 100000; // large number
 			int closestWaypoint = 0;
 
-			int i = 0;
+            int i = 0;
 			foreach (Transform t in waypoints) {
 				float dist = Vector3.Distance (t.position, p);
 				if (dist < closestLen) {
@@ -308,21 +295,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		private int MyClosestWaypoint() {
 			Vector3 p = transform.position;
-			//Quaternion o = m_Car.Orientation ();
-			float closestLen = 100000; // large number
-			int closestWaypoint = 0;
-
-			int i = 0;
-			foreach (Transform t in waypoints) {
-				float dist = Vector3.Distance (t.position, p);
-				if (dist < closestLen) {
-					closestLen = dist;
-					closestWaypoint = i;
-				}
-				i += 1;
-			}
-
-			return closestWaypoint;
+			return ClosestWaypoint(p);
 		}
 
 		// Compute the next waypoint we should go to
@@ -919,13 +892,11 @@ namespace UnityStandardAssets.Vehicles.Car
 			
         }
 
-
         //public void SetTarget (Transform target)
         //{
         //    m_Target = target;
         //    m_Driving = true;
         //}
     }
-
 }
 

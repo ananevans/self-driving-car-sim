@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Waypoint
+  - MainCar
+  - OtherTraffic
   layers:
   - Default
   - TransparentFX

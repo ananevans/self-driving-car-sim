@@ -7,16 +7,22 @@ namespace UnityStandardAssets.Vehicles.Car
     [RequireComponent(typeof(CarController))]
     public class CarTraffic : MonoBehaviour
     {
+        [SerializeField] private GameObject carPrefab;
+        //[SerializeField] private GameObject waypointsPrefab;
+        //[SerializeField] private GameObject sensorsPrefab;
 
         //forward cars
-        [SerializeField] private List<GameObject> cars;
+        private List<GameObject> cars;
         private Queue<GameObject> inactive_cars;
 
         public GameObject maincar;
 
         //reverse cars
-        [SerializeField] private List<GameObject> carsR;
+        private List<GameObject> carsR;
         private Queue<GameObject> inactive_carsR;
+
+        private int count_fwd_cars = 10;
+        private int count_rev_cars = 5;
 
         //use counter to update every second
         //private int counter;
@@ -27,16 +33,46 @@ namespace UnityStandardAssets.Vehicles.Car
         // Use this for initialization
         void Start()
         {
+            cars = new List<GameObject>();
+            carsR = new List<GameObject>();
             inactive_cars = new Queue<GameObject>();
             inactive_carsR = new Queue<GameObject>();
-            //counter = 0;
-            // push two cars at a time
-
-            //init = true;
-            //count_max = Random.Range (20, 60);
+            InstantiateForwardCars();
+            InstantiateReverseCars();
             IEnumerator coroutine = SpawnCars();
             StartCoroutine(coroutine);
         }
+
+
+        private void InstantiateForwardCars()
+        {
+            for (int i = 0; i < count_fwd_cars; i++)
+            {
+                GameObject car = Instantiate(carPrefab);
+                Vector3 p = car.transform.position;
+                p.z = p.z + 3 * i;
+                car.transform.position = p;
+                car.name = "CarAI" + i;
+                cars.Add(car);
+            }
+        }
+
+        private void InstantiateReverseCars()
+        {
+            for (int i = 0; i < count_rev_cars; i++)
+            {
+                GameObject car = Instantiate(carPrefab);
+                CarAIControl aiControl = car.GetComponent<CarAIControl>();
+                Vector3 p = car.transform.position;
+                p.z = p.z + 3 * i;
+                p.x = p.x + 14;
+                car.transform.position = p;
+                car.name = "CarAI" + i +"R";
+                aiControl.forward = false;
+                carsR.Add(car);
+            }
+        }
+
 
         private IEnumerator SpawnCars()
         {
@@ -53,18 +89,6 @@ namespace UnityStandardAssets.Vehicles.Car
         // Update is called once per frame
         void Update()
         {
-            //if (counter >= count_max || init)
-            //{
-            //    init = false;
-            //    UpdateForward();
-            //    UpdateReverse();
-            //    counter = 0;
-            //    count_max = Random.Range(20, 60);
-            //}
-            //else
-            //{
-            //    counter++;
-            //}
         }
 
         void FixedUpdate()
