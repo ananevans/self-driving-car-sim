@@ -8,8 +8,7 @@ namespace UnityStandardAssets.Vehicles.Car
     public class CarTraffic : MonoBehaviour
     {
         [SerializeField] private GameObject carPrefab;
-        //[SerializeField] private GameObject waypointsPrefab;
-        //[SerializeField] private GameObject sensorsPrefab;
+        [SerializeField] private GameObject config;
 
         //forward cars
         private List<GameObject> cars;
@@ -21,18 +20,15 @@ namespace UnityStandardAssets.Vehicles.Car
         private List<GameObject> carsR;
         private Queue<GameObject> inactive_carsR;
 
-        private int count_fwd_cars = 10;
-        private int count_rev_cars = 5;
-
-        //use counter to update every second
-        //private int counter;
-        //number of cars to push at update, max is 3
-        //private bool init;
-        //private int count_max;
+        private int count_fwd_cars;
+        private int count_rev_cars;
 
         // Use this for initialization
         void Start()
         {
+            LoadConfig loadConfig = config.GetComponent<LoadConfig>();
+            this.count_fwd_cars = loadConfig.GetForwardCarsCount();
+            this.count_rev_cars = loadConfig.GetReverseCarsCount();
             cars = new List<GameObject>();
             carsR = new List<GameObject>();
             inactive_cars = new Queue<GameObject>();

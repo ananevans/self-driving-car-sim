@@ -8,7 +8,7 @@ popd
 
 sleep 1
 
-./test.x86_64
+./test.x86_64 config.json
 
 
 

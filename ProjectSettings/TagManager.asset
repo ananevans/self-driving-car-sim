@@ -7,6 +7,7 @@ TagManager:
   - Waypoint
   - MainCar
   - OtherTraffic
+  - Config
   layers:
   - Default
   - TransparentFX
