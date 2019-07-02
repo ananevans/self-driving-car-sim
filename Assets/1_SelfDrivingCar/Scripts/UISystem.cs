@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityStandardAssets.Vehicles.Car;
 using UnityEngine.SceneManagement;
+using System;
+using System.IO;
 
 public class UISystem : MonoSingleton<UISystem> {
 
@@ -38,9 +40,26 @@ public class UISystem : MonoSingleton<UISystem> {
 
 	private CarAIControl carAI;
 
+    private StreamWriter violations_writer = null;
+
     // Use this for initialization
     void Start() {
-		
+        // open file to record violations
+        string filename = Environment.GetEnvironmentVariable("VIOLATIONS_FILE");
+        if (filename != null)
+        {
+            if (File.Exists(filename))
+            {
+                File.Delete(filename);
+            }
+            violations_writer = File.CreateText(filename);
+        }
+        else
+        {
+            Debug.LogWarning("Violations will not be reported!");
+        }
+
+
         topSpeed = carController.MaxSpeed;
         
 		AccStatus_Text.text = "";
@@ -52,6 +71,19 @@ public class UISystem : MonoSingleton<UISystem> {
 
 		auto_drive = true;
 		 
+    }
+
+    public void OnApplicationQuit()
+    {
+        if (violations_writer != null)
+        {
+            // this is just for testing purpose
+            if (best_dist_eval < 4.32)
+            {
+                violations_writer.WriteLine("Violation: best distance not long enough " + best_dist_eval);
+            }
+            violations_writer.Close();
+        }
     }
 
     public void SetMPHValue(float value)
@@ -76,6 +108,10 @@ public class UISystem : MonoSingleton<UISystem> {
 			Acc_Text.color = Color.red;
 			AccStatus_Text.text = "Max Acceleration Exceeded!";
 			check_incidents = true;
+            if (violations_writer != null)
+            {
+                violations_writer.WriteLine("Max Acceleration Exceeded!");
+            }
 		} 
 		else
 		{
@@ -84,6 +120,7 @@ public class UISystem : MonoSingleton<UISystem> {
 		}
 
 	}
+
 	public void SetJerkValue(float value)
 	{
 		Jerk_Text.text = "Jerk: "+value.ToString ("N0")+" m/s^3";
@@ -92,13 +129,18 @@ public class UISystem : MonoSingleton<UISystem> {
 			Jerk_Text.color = Color.red;
 			JerkStatus_Text.text = "Max Jerk Exceeded!";
 			check_incidents = true;
-		} 
+            if (violations_writer != null)
+            {
+                violations_writer.WriteLine("Max Jerk Exceeded!");
+            }
+        } 
 		else
 		{
 			Jerk_Text.color = Color.white;
 			JerkStatus_Text.text = "";
 		}
 	}
+
 	public void SetCollisionValue(bool collision)
 	{
 		if (collision) 
@@ -106,7 +148,11 @@ public class UISystem : MonoSingleton<UISystem> {
 			Collision_Text.color = Color.red;
 			Collision_Text.text = "Collision!";
 			check_incidents = true;
-		} 
+            if (violations_writer != null)
+            {
+                violations_writer.WriteLine("Collision!");
+            }
+        } 
 		else 
 		{
 			Collision_Text.color = Color.white;
@@ -121,7 +167,9 @@ public class UISystem : MonoSingleton<UISystem> {
 			Speeding_Text.color = Color.red;
 			Speeding_Text.text = "Violated Speed Limit!";
 			check_incidents = true;
-		} 
+
+            violations_writer.WriteLine("Max Jerk Exceeded!");
+        } 
 		else 
 		{
 			Speeding_Text.color = Color.white;
@@ -136,7 +184,9 @@ public class UISystem : MonoSingleton<UISystem> {
 			Lane_Text.color = Color.red;
 			Lane_Text.text = "Outside of Lane!";
 			check_incidents = true;
-		} 
+
+            violations_writer.WriteLine("Outside of Lane!");
+        } 
 		else 
 		{
 			Lane_Text.color = Color.white;

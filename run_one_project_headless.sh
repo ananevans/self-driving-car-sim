@@ -11,7 +11,7 @@ popd
 
 sleep 1
 
-./test.x86_64 config.json
+./test-headless.x86_64
 
 
 

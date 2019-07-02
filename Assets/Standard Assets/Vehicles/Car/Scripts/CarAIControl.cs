@@ -124,6 +124,10 @@ namespace UnityStandardAssets.Vehicles.Car
 		private int lane1_clear = 0;
 		private int lane2_clear = 0;
 
+        private Config config = new Config();
+        private float distance = 0.0f;
+        private float zero_speed_ticks = 0;
+
         private void Awake ()
         {
             // initialize Waypoints
@@ -149,6 +153,8 @@ namespace UnityStandardAssets.Vehicles.Car
 
 
 			MaxDistance = 200;
+
+            config = LoadConfig.GetConfig();
         }
 
 		public void Spawn(List<GameObject> cars)
@@ -771,10 +777,65 @@ namespace UnityStandardAssets.Vehicles.Car
 					main_lanekeep = true;
 				}
 
-			}
+
+                if (CheckSimulationEnd())
+                {
+                    Application.Quit();
+                }
+
+
+            }
         }
 
-		public void SetState(float x, float y, float theta)
+
+        private bool CheckSimulationEnd()
+        {
+            // update variables
+            float speed = m_CarController.CurrentSpeed;
+            distance += (Time.deltaTime * speed);
+            if (speed < 0.001)
+            {
+                zero_speed_ticks += 1;
+            }
+            else
+            {
+                zero_speed_ticks = 0;
+            }
+            // check termination conditions
+            // off road
+            if (frenet_d < config.d_min)
+            {
+                Debug.LogError("Application Done frenet_d too small");
+                return true;
+            }
+            if (frenet_d > config.d_max)
+            {
+                Debug.LogError("Application Done frenet_d too big");
+                return true;
+            }
+            // speed zero
+            if (zero_speed_ticks * Time.fixedDeltaTime > config.zero_speed_interval)
+            {
+                Debug.LogError("Application Done speed zero too long");
+                return true;
+            }
+            // distance without incident
+            if (dist_eval >= config.dist_without_incident)
+            {
+                Debug.LogError("Application Done Success");
+                return true;
+            }
+            // total distance
+            if (distance >= config.dist_max)
+            {
+                Debug.LogError("Application Done Max Distance Reached");
+                return true;
+            }
+            return false;
+        }
+
+
+        public void SetState(float x, float y, float theta)
 		{
 
 			// work out the local angle towards the target
