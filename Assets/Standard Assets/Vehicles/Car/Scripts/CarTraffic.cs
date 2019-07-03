@@ -8,7 +8,6 @@ namespace UnityStandardAssets.Vehicles.Car
     public class CarTraffic : MonoBehaviour
     {
         [SerializeField] private GameObject carPrefab;
-        [SerializeField] private GameObject config;
 
         //forward cars
         private List<GameObject> cars;
@@ -26,9 +25,9 @@ namespace UnityStandardAssets.Vehicles.Car
         // Use this for initialization
         void Start()
         {
-            LoadConfig loadConfig = config.GetComponent<LoadConfig>();
-            this.count_fwd_cars = loadConfig.GetForwardCarsCount();
-            this.count_rev_cars = loadConfig.GetReverseCarsCount();
+            Config config = LoadConfig.GetConfig();
+            this.count_fwd_cars = config.forwardCarsCount;
+            this.count_rev_cars = config.reverseCarsCount;
             cars = new List<GameObject>();
             carsR = new List<GameObject>();
             inactive_cars = new Queue<GameObject>();
@@ -74,11 +73,11 @@ namespace UnityStandardAssets.Vehicles.Car
         {
             while (true)
             {
-                Debug.Log("SpawnCars runs at " + Time.time);
-
-                yield return new WaitForSeconds(1);
+                //Debug.Log("SpawnCars runs at " + Time.time);
                 UpdateForward();
                 UpdateReverse();
+                int ticks = Random.Range(20, 60);
+                yield return new WaitForSecondsRealtime( ticks * Time.deltaTime );
             }
         }
 

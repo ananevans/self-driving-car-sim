@@ -77,10 +77,11 @@ public class UISystem : MonoSingleton<UISystem> {
     {
         if (violations_writer != null)
         {
+            Config config = LoadConfig.GetConfig();
             // this is just for testing purpose
-            if (best_dist_eval < 4.32)
+            if (best_dist_eval * 1609.344 < config.dist_without_incident)
             {
-                violations_writer.WriteLine("Violation: best distance not long enough " + best_dist_eval);
+                violations_writer.WriteLine("Violation: best distance not long enough " + best_dist_eval + " miles");
             }
             violations_writer.Close();
         }
@@ -168,7 +169,7 @@ public class UISystem : MonoSingleton<UISystem> {
 			Speeding_Text.text = "Violated Speed Limit!";
 			check_incidents = true;
 
-            violations_writer.WriteLine("Max Jerk Exceeded!");
+            violations_writer.WriteLine("iolated Speed Limit!");
         } 
 		else 
 		{

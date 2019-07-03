@@ -792,7 +792,7 @@ namespace UnityStandardAssets.Vehicles.Car
         {
             // update variables
             float speed = m_CarController.CurrentSpeed;
-            distance += (Time.deltaTime * speed);
+            distance += (Time.fixedDeltaTime * speed);
             if (speed < 0.001)
             {
                 zero_speed_ticks += 1;
@@ -877,14 +877,22 @@ namespace UnityStandardAssets.Vehicles.Car
 		{
 			if(main_collison)
 			{
-				if (collision_display > 50) 
-				{
-					collision_display = 0;
-					main_collison = false;
-				}
-				collision_display += 1;
-				return true;
-			}
+                if (SystemInfo.graphicsDeviceID == 0)
+                {
+                    //runs headless report only once the collision
+                    main_collison = false;
+                }
+                else
+                {
+                    if (collision_display > 50)
+                    {
+                        collision_display = 0;
+                        main_collison = false;
+                    }
+                    collision_display += 1;
+                }
+                return true;
+            }
 			return false;
 		}
 
