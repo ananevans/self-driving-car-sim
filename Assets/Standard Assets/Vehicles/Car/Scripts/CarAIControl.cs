@@ -3,7 +3,7 @@ using UnityEngine;
 using System.IO;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
-using System.Collections;
+using OracleInterface;
 
 namespace UnityStandardAssets.Vehicles.Car
 {
@@ -128,6 +128,8 @@ namespace UnityStandardAssets.Vehicles.Car
         private float distance = 0.0f;
         private float zero_speed_ticks = 0;
 
+        private OracleInterfaceComponent oracleInterface;
+
         private void Awake ()
         {
             // initialize Waypoints
@@ -155,6 +157,10 @@ namespace UnityStandardAssets.Vehicles.Car
 			MaxDistance = 200;
 
             config = LoadConfig.GetConfig();
+
+            string configFilename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
+            oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
+
         }
 
 		public void Spawn(List<GameObject> cars)

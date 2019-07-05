@@ -1,0 +1,28 @@
+﻿using System;
+namespace OracleInterface
+{
+    [Serializable]
+    public class Message
+    {
+        public const int update = 1;
+
+        public const int collision = 2;
+
+        public const int termination = 3;
+
+        private int type;
+
+        private string data;
+
+        public Message()
+        {
+        }
+
+        public Message(int type, string data)
+        {
+            this.type = type;
+            this.data = data;
+        }
+
+    }
+}
