@@ -14,12 +14,12 @@ namespace OracleInterface
 
         private int collisionType;
 
-        private int objectID;
+        private string info;
 
-        public CollisionMessage( int collisionType, int id )
+        public CollisionMessage( int collisionType, string info )
         {
             this.collisionType = collisionType;
-            this.objectID = id;
+            this.info = info;
         }
     }
 }

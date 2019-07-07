@@ -21,10 +21,13 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private int count_fwd_cars;
         private int count_rev_cars;
+        private IdGenerator idGenerator;
+
 
         // Use this for initialization
         void Start()
         {
+            idGenerator = new IdGenerator();
             Config config = LoadConfig.GetConfig();
             this.count_fwd_cars = config.forwardCarsCount;
             this.count_rev_cars = config.reverseCarsCount;
@@ -49,6 +52,8 @@ namespace UnityStandardAssets.Vehicles.Car
                 car.transform.position = p;
                 car.name = "CarAI" + i;
                 cars.Add(car);
+                CarAIControl aiControl = car.GetComponent<CarAIControl>();
+                aiControl.setId(idGenerator.next());
             }
         }
 
@@ -64,6 +69,7 @@ namespace UnityStandardAssets.Vehicles.Car
                 car.transform.position = p;
                 car.name = "CarAI" + i +"R";
                 aiControl.forward = false;
+                aiControl.setId(idGenerator.next());
                 carsR.Add(car);
             }
         }
@@ -107,9 +113,11 @@ namespace UnityStandardAssets.Vehicles.Car
                 CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
                 if (carAI.RegenerateCheck())
                 {
-                    Debug.Log("UpdateForward::Car inactive_car " + carAI.name);
+                    //Debug.Log("UpdateForward::Car inactive_car " + carAI.name);
                     //turn off the car and add it to a list
                     carAI.setStage();
+                    // change id when the car is spawn again
+                    carAI.setId(idGenerator.next());
                     inactive_cars.Enqueue(car);
                 }
 
@@ -124,7 +132,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
                 CarAIControl carAI = (CarAIControl)inactive_car.GetComponent(typeof(CarAIControl));
 
-                Debug.Log("UpdateForward:: spwans carAI " + carAI.name);
+                //Debug.Log("UpdateForward:: spwans carAI " + carAI.name);
 
                 carAI.Spawn(cars);
 
@@ -144,6 +152,7 @@ namespace UnityStandardAssets.Vehicles.Car
                 {
                     //turn off the car and add it to a list
                     carAI.setStage();
+                    carAI.setId(idGenerator.next());
                     inactive_carsR.Enqueue(car);
                 }
 
@@ -291,6 +300,13 @@ namespace UnityStandardAssets.Vehicles.Car
 
         }
 
+
+        public List<GameObject> GetTraffic()
+        {
+            return cars;
+        }
+
+
         public string example_sensor_fusion()
         {
             string result = "[";
@@ -331,5 +347,27 @@ namespace UnityStandardAssets.Vehicles.Car
             return result;
         }
 
+    }
+
+
+    class IdGenerator
+    {
+        private int nextId;
+
+        public IdGenerator()
+        {
+            this.nextId = 0;
+        }
+
+        public int next()
+        {
+            int result;
+            lock(this)
+            {
+                nextId = nextId + 1;
+                result = nextId;
+            }
+            return result;
+        }
     }
 }

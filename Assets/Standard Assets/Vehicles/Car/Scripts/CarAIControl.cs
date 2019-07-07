@@ -1,9 +1,9 @@
 using System;
-using UnityEngine;
-using System.IO;
-using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.IO;
 using OracleInterface;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace UnityStandardAssets.Vehicles.Car
 {
@@ -127,6 +127,7 @@ namespace UnityStandardAssets.Vehicles.Car
         private Config config = new Config();
         private float distance = 0.0f;
         private float zero_speed_ticks = 0;
+        private int id = 0;
 
         private OracleInterfaceComponent oracleInterface;
 
@@ -158,7 +159,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             config = LoadConfig.GetConfig();
 
-            string configFilename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
+            //string configFilename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
             oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
 
         }
@@ -244,7 +245,7 @@ namespace UnityStandardAssets.Vehicles.Car
 				m_Rigidbody.velocity = waypoints [compare_start].transform.forward * direction * m_CarController.MaxSpeed;
 				current_waypoint = ListIndex (compare_start);
 
-                Debug.Log("Spawn:: " + name + " at waypoint " + current_waypoint );
+                //Debug.Log("Spawn:: " + name + " at waypoint " + current_waypoint );
             }
 
 			else
@@ -783,6 +784,21 @@ namespace UnityStandardAssets.Vehicles.Car
 					main_lanekeep = true;
 				}
 
+                // update message
+                Vehicle mainVehicle = this.GetVehicleMessage();
+                List<Vehicle> traffic = new List<Vehicle>();
+                // find CarTraffic 
+                CarTraffic carTraffic = (CarTraffic)gameObject.GetComponent<CarTraffic>();
+                List<GameObject> cars = carTraffic.GetTraffic();
+                foreach (GameObject car in cars)
+                {
+                    CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
+                    traffic.Add(carAI.GetVehicleMessage());
+                }
+                UpdateMessage updateMessage = new UpdateMessage(
+                    mainVehicle, traffic
+                );
+                oracleInterface.Add(updateMessage);
 
                 if (CheckSimulationEnd())
                 {
@@ -791,6 +807,29 @@ namespace UnityStandardAssets.Vehicles.Car
 
 
             }
+        }
+
+
+        private Vehicle GetVehicleMessage()
+        {
+            this.getThisFrenetFrame();
+            Position position = new Position(
+                        transform.position.x,
+                        transform.position.z, // (x,y) is (x,z)
+                        transform.position.y
+                     );
+            Frenet frenet = new Frenet(frenet_s, frenet_d);
+            Velocity velocity = new Velocity(
+                m_Rigidbody.velocity.x,
+                m_Rigidbody.velocity.z, // not an error
+                m_Rigidbody.velocity.y
+                );
+            return new Vehicle(
+                this.id,
+                position,
+                frenet,
+                velocity
+                );
         }
 
 
@@ -812,29 +851,42 @@ namespace UnityStandardAssets.Vehicles.Car
             if (frenet_d < config.d_min)
             {
                 Debug.LogError("Application Done frenet_d too small");
+                oracleInterface.Add(
+                    new TerminationMessage(TerminationMessage.OFF_ROAD, frenet_d ));
                 return true;
             }
             if (frenet_d > config.d_max)
             {
                 Debug.LogError("Application Done frenet_d too big");
+                oracleInterface.Add(
+                    new TerminationMessage(TerminationMessage.OFF_ROAD, frenet_d));
                 return true;
             }
             // speed zero
             if (zero_speed_ticks * Time.fixedDeltaTime > config.zero_speed_interval)
             {
                 Debug.LogError("Application Done speed zero too long");
+                oracleInterface.Add(
+                    new TerminationMessage(TerminationMessage.STOPPED,
+                        zero_speed_ticks * Time.fixedDeltaTime));
                 return true;
             }
             // distance without incident
             if (dist_eval >= config.dist_without_incident)
             {
                 Debug.LogError("Application Done Success");
+                oracleInterface.Add(
+                    new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
+                        dist_eval));
                 return true;
             }
             // total distance
             if (distance >= config.dist_max)
             {
                 Debug.LogError("Application Done Max Distance Reached");
+                oracleInterface.Add(
+                    new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
+                        distance));
                 return true;
             }
             return false;
@@ -935,15 +987,36 @@ namespace UnityStandardAssets.Vehicles.Car
 		
 
 
-        private void OnCollisionStay (Collision col)
+        private void OnCollisionStay (Collision other)
 		{
-			if (maincar) {
+            var otherAI = other.rigidbody.GetComponent<CarAIControl>();
+            if (maincar) {
 				main_collison = true;
-			}
+                //for now we only have collision with other cars
+                Debug.Log("Collision with " + other.gameObject.name);
+                if (other.gameObject.CompareTag("OtherTraffic"))
+                {
+                    oracleInterface.Add(
+                        new CollisionMessage(
+                            CollisionMessage.VEHICLE, 
+                            ""+otherAI.id
+                        ) 
+                    );
+                }
+                else
+                {
+                    oracleInterface.Add(
+                        new CollisionMessage(
+                            CollisionMessage.STATIC_SCENERY,
+                            other.gameObject.name
+                        )
+                    );
+                }
+            }
 
 			// detect collision against other cars, so that we can take evasive action
-			if (col.rigidbody != null) {
-				var otherAI = col.rigidbody.GetComponent<CarAIControl> ();
+			if (other.rigidbody != null) {
+				
 				if (otherAI != null) {
 					// we'll take evasive action for 1 second
 					m_AvoidOtherCarTime = Time.time + 1;
@@ -965,6 +1038,11 @@ namespace UnityStandardAssets.Vehicles.Car
 				}
 			}
 			
+        }
+
+        public void setId(int id)
+        {
+            this.id = id;
         }
 
         //public void SetTarget (Transform target)

@@ -168,8 +168,10 @@ public class UISystem : MonoSingleton<UISystem> {
 			Speeding_Text.color = Color.red;
 			Speeding_Text.text = "Violated Speed Limit!";
 			check_incidents = true;
-
-            violations_writer.WriteLine("iolated Speed Limit!");
+            if (violations_writer != null)
+            {
+                violations_writer.WriteLine("Violated Speed Limit!");
+            }
         } 
 		else 
 		{
@@ -185,8 +187,10 @@ public class UISystem : MonoSingleton<UISystem> {
 			Lane_Text.color = Color.red;
 			Lane_Text.text = "Outside of Lane!";
 			check_incidents = true;
-
-            violations_writer.WriteLine("Outside of Lane!");
+            if (violations_writer != null)
+            {
+                violations_writer.WriteLine("Outside of Lane!");
+            }
         } 
 		else 
 		{

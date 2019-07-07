@@ -68,7 +68,7 @@ public class CommandServer : MonoBehaviour
 	// 
 	void onManual(SocketIOEvent obj)
 	{
-        Debug.Log("onManual");
+        //Debug.Log("onManual");
         // This is odd but if I comment the line below it stops working
 		EmitTelemetry (obj);
 	}
@@ -77,7 +77,7 @@ public class CommandServer : MonoBehaviour
 	{
 		JSONObject jsonObject = obj.data;
 
-		Debug.Log ("Control");
+		//Debug.Log ("Control");
 
 
 		var next_x = jsonObject.GetField ("next_x");
@@ -109,7 +109,7 @@ public class CommandServer : MonoBehaviour
 			// send only if it's not being manually driven
 			if ( !point_path.isServerProcess() ) {
 				_socket.Emit("telemetry", new JSONObject());
-                Debug.Log("EmitTelemetry !point_path.isServerProcess()");
+                //Debug.Log("EmitTelemetry !point_path.isServerProcess()");
 
 			}
 			else {
@@ -181,7 +181,7 @@ public class CommandServer : MonoBehaviour
                 //data["speed"] = new JSONObject(_carController.CurrentSpeed);
 
 
-                Debug.Log("EmitTelemetry " + data);
+                //Debug.Log("EmitTelemetry " + data);
 
 				_socket.Emit("telemetry", new JSONObject(data));
 			}
