@@ -159,7 +159,6 @@ namespace UnityStandardAssets.Vehicles.Car
 
             config = LoadConfig.GetConfig();
 
-            //string configFilename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
             oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
 
         }

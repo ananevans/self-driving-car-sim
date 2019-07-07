@@ -46,19 +46,16 @@ public class UISystem : MonoSingleton<UISystem> {
     void Start() {
         // open file to record violations
         string filename = Environment.GetEnvironmentVariable("VIOLATIONS_FILE");
-        if (filename != null)
+        if (filename == null)
         {
-            if (File.Exists(filename))
-            {
-                File.Delete(filename);
-            }
-            violations_writer = File.CreateText(filename);
+            Debug.LogWarning("VIOLATIONS_FILE variable not set, using ./violations.txt");
+            filename = "./violations.txt";
         }
-        else
+        if (File.Exists(filename))
         {
-            Debug.LogWarning("Violations will not be reported!");
+            File.Delete(filename);
         }
-
+        violations_writer = File.CreateText(filename);
 
         topSpeed = carController.MaxSpeed;
         

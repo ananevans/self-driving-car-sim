@@ -22,15 +22,17 @@ namespace OracleInterface
         // added to the queue
         private ManualResetEvent threadWaitHandle;
 
-        public OracleInterfaceComponent(String outputFile)
-        {
-            this.filename = outputFile;
-            messages = Queue.Synchronized(new Queue());
-            threadWaitHandle = new ManualResetEvent(false);
-        }
-
         public void Awake()
         {
+            this.filename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
+            if (this.filename == null)
+            {
+                Debug.Log("ORACLE_INTERFACE_FILE not set, using ./oracle-interface.json");
+                this.filename = "./oracle-interface.json";
+            }
+
+            messages = Queue.Synchronized(new Queue());
+            threadWaitHandle = new ManualResetEvent(false);
             Interlocked.Exchange(ref stop, 0);
             thread = new Thread(run);
         }
