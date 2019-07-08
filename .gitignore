@@ -26,3 +26,7 @@ sdc.app
 .vs/
 *.x86_64
 *_Data/**
+
+#log files
+oracle-interface.json
+violations.txt
