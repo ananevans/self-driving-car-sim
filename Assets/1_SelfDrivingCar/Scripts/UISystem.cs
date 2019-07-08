@@ -48,8 +48,8 @@ public class UISystem : MonoSingleton<UISystem> {
         string filename = Environment.GetEnvironmentVariable("VIOLATIONS_FILE");
         if (filename == null)
         {
-            Debug.LogWarning("VIOLATIONS_FILE variable not set, using ./violations.txt");
-            filename = "./violations.txt";
+            Debug.LogWarning("VIOLATIONS_FILE variable not set, using /home/ans5k/work/self-driving-car-sim/violations.txt");
+            filename = "/home/ans5k/work/self-driving-car-sim/violations.txt";
         }
         if (File.Exists(filename))
         {

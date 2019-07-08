@@ -12,9 +12,9 @@ namespace OracleInterface
 
         public const int BICYCLE = 4;
 
-        private int collisionType;
+        public int collisionType;
 
-        private string info;
+        public string info;
 
         public CollisionMessage( int collisionType, string info )
         {

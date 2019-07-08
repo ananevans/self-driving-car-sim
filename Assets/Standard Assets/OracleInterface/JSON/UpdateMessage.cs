@@ -6,14 +6,17 @@ namespace OracleInterface
     [Serializable]
     public class UpdateMessage
     {
-        private Vehicle ego_vehicle;
+        public Vehicle ego_vehicle;
 
-        private List<Vehicle> traffic;
+        public List<Vehicle> traffic;
 
-        public UpdateMessage(Vehicle vehicle, List<Vehicle> traffic)
+        public float delta_t;
+
+        public UpdateMessage(Vehicle vehicle, List<Vehicle> traffic, float delta_t)
         {
             this.ego_vehicle = vehicle;
             this.traffic = traffic;
+            this.delta_t = delta_t;
         }
     }
 }

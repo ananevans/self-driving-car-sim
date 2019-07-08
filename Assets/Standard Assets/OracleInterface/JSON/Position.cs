@@ -4,7 +4,7 @@ namespace OracleInterface
     [Serializable]
     public class Position
     {
-        private float x, y, z;
+        public float x, y, z;
 
         public Position(float x, float y, float z)
         {

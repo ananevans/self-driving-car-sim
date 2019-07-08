@@ -12,9 +12,9 @@ namespace OracleInterface
 
         public const int OFF_ROAD = 4;
 
-        private int type;
+        public int type;
 
-        private float data;
+        public float data;
 
         public TerminationMessage(int type, float data)
         {

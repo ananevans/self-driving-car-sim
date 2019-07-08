@@ -4,13 +4,13 @@ namespace OracleInterface
     [Serializable]
     public class Vehicle
     {
-        private int id;
+        public int id;
 
-        private Position position;
+        public Position position;
 
-        private Frenet frenet;
+        public Frenet frenet;
 
-        private Velocity velocity;
+        public Velocity velocity;
 
         public Vehicle( int id, Position position, Frenet frenet, 
             Velocity velocity )

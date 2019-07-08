@@ -795,13 +795,19 @@ namespace UnityStandardAssets.Vehicles.Car
                     traffic.Add(carAI.GetVehicleMessage());
                 }
                 UpdateMessage updateMessage = new UpdateMessage(
-                    mainVehicle, traffic
+                    mainVehicle, traffic, Time.fixedDeltaTime
                 );
                 oracleInterface.Add(updateMessage);
 
                 if (CheckSimulationEnd())
                 {
-                    Application.Quit();
+                    #if UNITY_EDITOR
+                    // Application.Quit() does not work in the editor so
+                    // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+                        UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                        Application.Quit();
+                    #endif
                 }
 
 
@@ -988,34 +994,33 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void OnCollisionStay (Collision other)
 		{
-            var otherAI = other.rigidbody.GetComponent<CarAIControl>();
-            if (maincar) {
-				main_collison = true;
-                //for now we only have collision with other cars
-                Debug.Log("Collision with " + other.gameObject.name);
-                if (other.gameObject.CompareTag("OtherTraffic"))
-                {
-                    oracleInterface.Add(
-                        new CollisionMessage(
-                            CollisionMessage.VEHICLE, 
-                            ""+otherAI.id
-                        ) 
-                    );
+            if (other.rigidbody != null)
+            {
+                var otherAI = other.rigidbody.GetComponent<CarAIControl>();
+                if (maincar) {
+				    main_collison = true;
+                    //for now we only have collision with other cars
+                    Debug.Log("Collision with " + other.gameObject.name);
+                    if (other.gameObject.CompareTag("OtherTraffic"))
+                    {
+                        oracleInterface.Add(
+                            new CollisionMessage(
+                                CollisionMessage.VEHICLE, 
+                                ""+otherAI.id
+                            ) 
+                        );
+                    }
+                    else
+                    {
+                        oracleInterface.Add(
+                            new CollisionMessage(
+                                CollisionMessage.STATIC_SCENERY,
+                                other.gameObject.name
+                            )
+                        );
+                    }
                 }
-                else
-                {
-                    oracleInterface.Add(
-                        new CollisionMessage(
-                            CollisionMessage.STATIC_SCENERY,
-                            other.gameObject.name
-                        )
-                    );
-                }
-            }
 
-			// detect collision against other cars, so that we can take evasive action
-			if (other.rigidbody != null) {
-				
 				if (otherAI != null) {
 					// we'll take evasive action for 1 second
 					m_AvoidOtherCarTime = Time.time + 1;

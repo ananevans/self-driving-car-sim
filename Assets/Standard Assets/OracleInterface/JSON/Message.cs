@@ -10,9 +10,9 @@ namespace OracleInterface
 
         public const int termination = 3;
 
-        private int type;
+        public int type;
 
-        private string data;
+        public string data;
 
         public Message()
         {
