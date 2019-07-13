@@ -827,7 +827,8 @@ namespace UnityStandardAssets.Vehicles.Car
             Velocity velocity = new Velocity(
                 m_Rigidbody.velocity.x,
                 m_Rigidbody.velocity.z, // not an error
-                m_Rigidbody.velocity.y
+                m_Rigidbody.velocity.y,
+                m_Rigidbody.velocity.magnitude
                 );
             return new Vehicle(
                 this.id,
