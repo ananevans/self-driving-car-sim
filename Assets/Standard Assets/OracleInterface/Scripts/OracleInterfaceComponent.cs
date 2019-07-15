@@ -28,7 +28,7 @@ namespace OracleInterface
             if (this.filename == null)
             {
                 Debug.Log("ORACLE_INTERFACE_FILE not set, using /home/ans5k/work/self-driving-car-sim/oracle-interface.json");
-                this.filename = "/home/ans5k/work/self-driving-car-sim/oracle-interface.json";
+                this.filename = "/home/nora/work/self-driving-car-sim/oracle-interface.json";
             }
 
             messages = Queue.Synchronized(new Queue());
@@ -90,6 +90,13 @@ namespace OracleInterface
                         threadWaitHandle.Reset();
                         Debug.Log("Empty queue: Woke Up");
                     }
+                }
+                // empty the queue just in case
+                while (messages.Count > 0)
+                {
+                    // write messages in the file
+                    Message msg = (Message)messages.Dequeue();
+                    writer.WriteLine(JsonUtility.ToJson(msg));
                 }
             }
         }

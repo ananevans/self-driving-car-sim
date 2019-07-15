@@ -258,10 +258,13 @@ namespace UnityStandardAssets.Vehicles.Car
 				float speed = m_Rigidbody.velocity.magnitude;
 
 				if (averageSpeed.Count >= time_steps) {
-				
-					float averaged_speed = AverageLastSpeed ();
-					AccelerationT = (averaged_speed - lastSpeed) / (time_steps*Time.deltaTime);
-					AccelerationN = (averaged_speed) * (averaged_speed) * SenseCurve ();
+
+//Debug.LogWarning("time "+ Time.deltaTime +" fixed time " + Time.fixedDeltaTime);
+
+                    float averaged_speed = AverageLastSpeed ();
+                    // AccelerationT = (averaged_speed - lastSpeed) / (time_steps*Time.deltaTime);
+                    AccelerationT = (averaged_speed - lastSpeed) / (time_steps * Time.fixedDeltaTime);
+                    AccelerationN = (averaged_speed) * (averaged_speed) * SenseCurve ();
 					lastSpeed = averaged_speed;
 
 					float currentAcc = SenseAcc ();
@@ -276,8 +279,9 @@ namespace UnityStandardAssets.Vehicles.Car
 				if (averageAcc.Count >= 5) 
 				{
 					float averaged_acc = AverageLastAcc();
-					Jerk = (averaged_acc - lastAcc) / ((5*time_steps) * Time.deltaTime);
-					lastAcc = averaged_acc;
+                    Jerk = (averaged_acc - lastAcc) / ((5 * time_steps) * Time.fixedDeltaTime);
+                    // Jerk = (averaged_acc - lastAcc) / ((5*time_steps) * Time.deltaTime);
+                    lastAcc = averaged_acc;
 
 					averageAcc.Clear ();
 				}

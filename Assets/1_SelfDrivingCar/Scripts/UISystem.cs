@@ -49,7 +49,7 @@ public class UISystem : MonoSingleton<UISystem> {
         if (filename == null)
         {
             Debug.LogWarning("VIOLATIONS_FILE variable not set, using /home/ans5k/work/self-driving-car-sim/violations.txt");
-            filename = "/home/ans5k/work/self-driving-car-sim/violations.txt";
+            filename = "/home/nora/work/self-driving-car-sim/violations.txt";
         }
         if (File.Exists(filename))
         {
@@ -65,8 +65,12 @@ public class UISystem : MonoSingleton<UISystem> {
         SetMPHValue(0);
 
 		carAI = (CarAIControl) carController.GetComponent(typeof(CarAIControl));
+        if (carAI == null)
+        {
+            Debug.LogError("CarAIControl component not found!");
+        }
 
-		auto_drive = true;
+        auto_drive = true;
 		 
     }
 

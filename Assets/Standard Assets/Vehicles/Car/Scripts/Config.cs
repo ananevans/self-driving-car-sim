@@ -12,5 +12,6 @@ namespace UnityStandardAssets.Vehicles.Car
         public int zero_speed_interval = 60;
         public float dist_without_incident = 6952.366f;
         public float dist_max = 8046.72f;
+        public float timeout = 0;
     }
 }

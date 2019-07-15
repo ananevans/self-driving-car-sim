@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using OracleInterface;
@@ -161,9 +162,28 @@ namespace UnityStandardAssets.Vehicles.Car
 
             oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
 
+            if (config.timeout > 0.0)
+            {
+                IEnumerator coroutine = Terminate();
+                StartCoroutine(coroutine);
+            }
+
         }
 
-		public void Spawn(List<GameObject> cars)
+
+        private IEnumerator Terminate()
+        {
+            yield return new WaitForSecondsRealtime(config.timeout);
+            #if UNITY_EDITOR
+                // Application.Quit() does not work in the editor so
+                // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
+        }
+
+        public void Spawn(List<GameObject> cars)
 		{
             int direction = 1;
 			if(!forward)
@@ -887,13 +907,16 @@ namespace UnityStandardAssets.Vehicles.Car
                 return true;
             }
             // total distance
-            if (distance >= config.dist_max)
+            if (config.dist_max > 0.0)
             {
-                Debug.LogError("Application Done Max Distance Reached");
-                oracleInterface.Add(
-                    new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
-                        distance));
-                return true;
+                if (distance >= config.dist_max)
+                {
+                    Debug.LogError("Application Done Max Distance Reached");
+                    oracleInterface.Add(
+                        new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
+                            distance));
+                    return true;
+                }
             }
             return false;
         }
