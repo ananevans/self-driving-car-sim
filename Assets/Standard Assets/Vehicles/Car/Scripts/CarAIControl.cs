@@ -898,13 +898,16 @@ namespace UnityStandardAssets.Vehicles.Car
                 return true;
             }
             // distance without incident
-            if (dist_eval >= config.dist_without_incident)
+            if (config.dist_without_incident > 0.0)
             {
-                Debug.LogError("Application Done Success");
-                oracleInterface.Add(
-                    new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
-                        dist_eval));
-                return true;
+                if (dist_eval >= config.dist_without_incident)
+                {
+                    Debug.LogError("Application Done Success");
+                    oracleInterface.Add(
+                        new TerminationMessage(TerminationMessage.DISTANCE_WITHOUT_INCIDENT,
+                            dist_eval));
+                    return true;
+                }
             }
             // total distance
             if (config.dist_max > 0.0)
@@ -1013,25 +1016,24 @@ namespace UnityStandardAssets.Vehicles.Car
 			return false;
 		}
 
-		
 
-
-        private void OnCollisionStay (Collision other)
-		{
+        private void OnCollisionEnter(Collision other)
+        {
             if (other.rigidbody != null)
             {
                 var otherAI = other.rigidbody.GetComponent<CarAIControl>();
-                if (maincar) {
-				    main_collison = true;
+                if (maincar)
+                {
+                    main_collison = true;
                     //for now we only have collision with other cars
                     Debug.Log("Collision with " + other.gameObject.name);
                     if (other.gameObject.CompareTag("OtherTraffic"))
                     {
                         oracleInterface.Add(
                             new CollisionMessage(
-                                CollisionMessage.VEHICLE, 
-                                ""+otherAI.id
-                            ) 
+                                CollisionMessage.VEHICLE,
+                                "" + otherAI.id
+                            )
                         );
                     }
                     else
@@ -1043,6 +1045,18 @@ namespace UnityStandardAssets.Vehicles.Car
                             )
                         );
                     }
+                }
+            }
+        }
+
+
+        private void OnCollisionStay (Collision other)
+		{
+            if (other.rigidbody != null)
+            {
+                var otherAI = other.rigidbody.GetComponent<CarAIControl>();
+                if (maincar) {
+				    main_collison = true;
                 }
 
 				if (otherAI != null) {
