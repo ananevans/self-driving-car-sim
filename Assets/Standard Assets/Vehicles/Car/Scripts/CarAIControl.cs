@@ -160,7 +160,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             config = LoadConfig.GetConfig();
 
-            oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
+            this.oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
 
             if (config.timeout > 0.0)
             {
@@ -898,7 +898,7 @@ namespace UnityStandardAssets.Vehicles.Car
                 return true;
             }
             // distance without incident
-            if (config.dist_without_incident > 0.0)
+            if (config.dist_without_incident > 0.001)
             {
                 if (dist_eval >= config.dist_without_incident)
                 {
@@ -910,7 +910,7 @@ namespace UnityStandardAssets.Vehicles.Car
                 }
             }
             // total distance
-            if (config.dist_max > 0.0)
+            if (config.dist_max > 0.001)
             {
                 if (distance >= config.dist_max)
                 {

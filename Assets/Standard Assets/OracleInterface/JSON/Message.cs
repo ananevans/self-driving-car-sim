@@ -10,6 +10,10 @@ namespace OracleInterface
 
         public const int termination = 3;
 
+        public const int acceleration = 4;
+
+        public const int jerk = 5;
+
         public int type;
 
         public string data;

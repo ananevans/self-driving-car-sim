@@ -4,8 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-
-
+using OracleInterface;
 
 namespace UnityStandardAssets.Vehicles.Car
 {
@@ -81,7 +80,14 @@ namespace UnityStandardAssets.Vehicles.Car
 		private List<float> averageSpeed = new List<float>(); //average speed from previous frames
 		private List<float> averageAcc = new List<float>(); //average acceleration from previous frames
 
-		public Vector3 Position () {
+        private OracleInterfaceComponent oracleInterface;
+
+        private void Awake()
+        {
+            this.oracleInterface = GameObject.Find("OracleInterface").GetComponent<OracleInterfaceComponent>();
+        }
+
+        public Vector3 Position () {
 			return transform.position;
 		}
 		public List<int> getGPS(){
@@ -272,6 +278,12 @@ namespace UnityStandardAssets.Vehicles.Car
 
 					averageSpeed.Clear ();
 					previous_pos.Clear ();
+
+                    AccelerationMessage acceleration = new AccelerationMessage(
+                        AccelerationT, AccelerationN, currentAcc,
+                        time_steps * Time.fixedDeltaTime
+                    );
+                    oracleInterface.Add(acceleration);
 				}
 				averageSpeed.Add (speed);
 				previous_pos.Add (transform.position);
@@ -284,6 +296,10 @@ namespace UnityStandardAssets.Vehicles.Car
                     lastAcc = averaged_acc;
 
 					averageAcc.Clear ();
+
+                    JerkMessage jerkMessage = new JerkMessage(Jerk, (5 * time_steps) * Time.fixedDeltaTime);
+                    oracleInterface.Add(jerkMessage);
+
 				}
 					
 

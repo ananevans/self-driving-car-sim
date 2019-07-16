@@ -27,7 +27,7 @@ namespace OracleInterface
             this.filename = Environment.GetEnvironmentVariable("ORACLE_INTERFACE_FILE");
             if (this.filename == null)
             {
-                Debug.Log("ORACLE_INTERFACE_FILE not set, using /home/ans5k/work/self-driving-car-sim/oracle-interface.json");
+                Debug.Log("ORACLE_INTERFACE_FILE not set, using /home/nora/work/self-driving-car-sim/oracle-interface.json");
                 this.filename = "/home/nora/work/self-driving-car-sim/oracle-interface.json";
             }
 
@@ -61,6 +61,19 @@ namespace OracleInterface
         {
             Add(new Message(Message.termination,
                     JsonUtility.ToJson(terminationMessage)));
+        }
+
+        public void Add(AccelerationMessage message)
+        {
+            Add(new Message(Message.acceleration,
+                    JsonUtility.ToJson(message)));
+        }
+
+
+        public void Add(JerkMessage message)
+        {
+            Add(new Message(Message.jerk,
+                    JsonUtility.ToJson(message)));
         }
 
         private void Add(Message msg)
