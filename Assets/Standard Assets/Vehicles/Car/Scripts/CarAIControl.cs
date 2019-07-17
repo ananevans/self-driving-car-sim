@@ -164,6 +164,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
             if (config.timeout > 0.0)
             {
+                Debug.Log("Config timeout is set to " + config.timeout);
                 IEnumerator coroutine = Terminate();
                 StartCoroutine(coroutine);
             }
@@ -174,9 +175,12 @@ namespace UnityStandardAssets.Vehicles.Car
         private IEnumerator Terminate()
         {
             yield return new WaitForSecondsRealtime(config.timeout);
+
+            Debug.Log("Timeout expired " + config.timeout);
+
             #if UNITY_EDITOR
-                // Application.Quit() does not work in the editor so
-                // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
                 UnityEditor.EditorApplication.isPlaying = false;
             #else
                 Application.Quit();
@@ -900,6 +904,7 @@ namespace UnityStandardAssets.Vehicles.Car
             // distance without incident
             if (config.dist_without_incident > 0.001)
             {
+                //Debug.Log("Config dist_without_incident set to " + config.dist_without_incident);
                 if (dist_eval >= config.dist_without_incident)
                 {
                     Debug.LogError("Application Done Success");
@@ -909,9 +914,14 @@ namespace UnityStandardAssets.Vehicles.Car
                     return true;
                 }
             }
+            else
+            {
+                //Debug.Log("Config dist_without_incident not set: " + config.dist_without_incident);
+            }
             // total distance
             if (config.dist_max > 0.001)
             {
+                //Debug.Log("Config dist_max set to " + config.dist_max);
                 if (distance >= config.dist_max)
                 {
                     Debug.LogError("Application Done Max Distance Reached");
@@ -920,6 +930,10 @@ namespace UnityStandardAssets.Vehicles.Car
                             distance));
                     return true;
                 }
+            }
+            else
+            {
+                //Debug.Log("Config dist_without_incident not set: " + config.dist_max);
             }
             return false;
         }

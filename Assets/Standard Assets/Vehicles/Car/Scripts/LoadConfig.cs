@@ -17,9 +17,10 @@ namespace UnityStandardAssets.Vehicles.Car
             string configFilename = Environment.GetEnvironmentVariable("CONFIG_FILE");
             if (configFilename != null)
             {
-                Debug.Log("Loading configuration from file " + configFilename);
+                Debug.Log("Configuration file " + configFilename);
                 if (System.IO.File.Exists(configFilename))
                 {
+                    Debug.Log("Loading configuration from file " + configFilename);
                     string fileContent = System.IO.File.ReadAllText(configFilename);
                     config = JsonUtility.FromJson<Config>(fileContent);
                 }
