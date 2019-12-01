@@ -5,8 +5,8 @@ namespace UnityStandardAssets.Vehicles.Car
     [Serializable]
     public class Config
     {
-        public int forwardCarsCount = 12;
-        public int reverseCarsCount = 6;
+        public int forwardCarsCount = 0;
+        public int reverseCarsCount = 0;
         //public float d_min = -2;
         //public float d_max = 14;
         public float d_min = -20;

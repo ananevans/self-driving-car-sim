@@ -107,70 +107,70 @@ namespace UnityStandardAssets.Vehicles.Car
 
         public void UpdateForward()
         {
-            //add any inactive car to inactive car list
-            foreach (GameObject car in cars)
-            {
-                CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
-                if (carAI.RegenerateCheck())
-                {
-                    //Debug.Log("UpdateForward::Car inactive_car " + carAI.name);
-                    //turn off the car and add it to a list
-                    carAI.setStage();
-                    // change id when the car is spawn again
-                    carAI.setId(idGenerator.next());
-                    inactive_cars.Enqueue(car);
-                }
+            ////add any inactive car to inactive car list
+            //foreach (GameObject car in cars)
+            //{
+            //    CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
+            //    if (carAI.RegenerateCheck())
+            //    {
+            //        //Debug.Log("UpdateForward::Car inactive_car " + carAI.name);
+            //        //turn off the car and add it to a list
+            //        carAI.setStage();
+            //        // change id when the car is spawn again
+            //        carAI.setId(idGenerator.next());
+            //        inactive_cars.Enqueue(car);
+            //    }
 
-            }
-            // count how many cars we have pushed
-            int push = Random.Range(1, 4);
-            int pushed = 0;
+            //}
+            //// count how many cars we have pushed
+            //int push = Random.Range(1, 4);
+            //int pushed = 0;
 
-            while ((inactive_cars.Count > 0) && (pushed < push))
-            {
-                GameObject inactive_car = inactive_cars.Dequeue();
+            //while ((inactive_cars.Count > 0) && (pushed < push))
+            //{
+            //    GameObject inactive_car = inactive_cars.Dequeue();
 
-                CarAIControl carAI = (CarAIControl)inactive_car.GetComponent(typeof(CarAIControl));
+            //    CarAIControl carAI = (CarAIControl)inactive_car.GetComponent(typeof(CarAIControl));
 
-                //Debug.Log("UpdateForward:: spwans carAI " + carAI.name);
+            //    //Debug.Log("UpdateForward:: spwans carAI " + carAI.name);
 
-                carAI.Spawn(cars);
+            //    carAI.Spawn(cars);
 
-                pushed++;
-            }
+            //    pushed++;
+            //}
 
         }
 
 
         public void UpdateReverse()
         {
-            //add any inactive car to inactive car list
-            foreach (GameObject car in carsR)
-            {
-                CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
-                if (carAI.RegenerateCheck())
-                {
-                    //turn off the car and add it to a list
-                    carAI.setStage();
-                    carAI.setId(idGenerator.next());
-                    inactive_carsR.Enqueue(car);
-                }
+            ////add any inactive car to inactive car list
+            //foreach (GameObject car in carsR)
+            //{
+            //    CarAIControl carAI = (CarAIControl)car.GetComponent(typeof(CarAIControl));
+            //    if (carAI.RegenerateCheck())
+            //    {
+            //        //turn off the car and add it to a list
+            //        carAI.setStage();
+            //        carAI.setId(idGenerator.next());
+            //        inactive_carsR.Enqueue(car);
+            //    }
 
-            }
-            // count how many cars we have pushed
-            int push = Random.Range(1, 4);
-            int pushed = 0;
+            //}
+            //// count how many cars we have pushed
+            //int push = Random.Range(1, 4);
+            //int pushed = 0;
 
-            while ((inactive_carsR.Count > 0) && (pushed < push))
-            {
-                GameObject inactive_car = inactive_carsR.Dequeue();
+            //while ((inactive_carsR.Count > 0) && (pushed < push))
+            //{
+            //    GameObject inactive_car = inactive_carsR.Dequeue();
 
-                CarAIControl carAI = (CarAIControl)inactive_car.GetComponent(typeof(CarAIControl));
+            //    CarAIControl carAI = (CarAIControl)inactive_car.GetComponent(typeof(CarAIControl));
 
-                carAI.Spawn(carsR);
+            //    carAI.Spawn(carsR);
 
-                pushed++;
-            }
+            //    pushed++;
+            //}
         }
 
         public bool lane_clear(GameObject mycar, bool forward, int lane)

@@ -887,7 +887,8 @@ namespace UnityStandardAssets.Vehicles.Car
             }
             if (frenet_d > config.d_max)
             {
-                Debug.LogError("Application Done frenet_d too big");
+                Debug.LogError("Application Done frenet_d too big frenet_d=" + 
+                    frenet_d + " config.d_max=" + config.d_max);
                 oracleInterface.Add(
                     new TerminationMessage(TerminationMessage.OFF_ROAD, frenet_d));
                 return true;
