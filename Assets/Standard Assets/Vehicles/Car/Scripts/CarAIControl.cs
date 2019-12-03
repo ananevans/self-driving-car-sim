@@ -187,96 +187,96 @@ namespace UnityStandardAssets.Vehicles.Car
             #endif
         }
 
-        public void Spawn(List<GameObject> cars)
-		{
-            int direction = 1;
-			if(!forward)
-			{
-				direction = -1;
-			}
+  //      public void Spawn(List<GameObject> cars)
+		//{
+  //          int direction = 1;
+		//	if(!forward)
+		//	{
+		//		direction = -1;
+		//	}
 				
-			int escape_cnt = 0;
-			Vector3 spawn_pos = waypoints[0].position;
-			int compare_start = 0;
-			bool spawn_check = false;
-			while(!spawn_check && escape_cnt < 500)
-			{
-				spawn_check = true;
-				lane = Random.Range (0, 3);
+		//	int escape_cnt = 0;
+		//	Vector3 spawn_pos = waypoints[0].position;
+		//	int compare_start = 0;
+		//	bool spawn_check = false;
+		//	while(!spawn_check && escape_cnt < 500)
+		//	{
+		//		spawn_check = true;
+		//		lane = Random.Range (0, 3);
 			
 
-				lane_change_time = 0;
+		//		lane_change_time = 0;
 			
-				int waypoint_offset = 0;
-				if (forward) 
-				{
-					waypoint_offset = Random.Range (-3, -1);
-					m_CarController.setMaxSpeed (50 + 10 * Random.Range (0.0f, 1.0f));
-					int infront_or_behind = Random.Range (0, 2);
-					//int infront_or_behind = 0;
-					if (infront_or_behind == 1) 
-					{
-						waypoint_offset = Random.Range (4, 6);
-						m_CarController.setMaxSpeed (50 + 10 * Random.Range (-1.0f, 0.0f));
-					}
-				} 
-				else 
-				{
-					waypoint_offset = Random.Range (3, 7);
-					m_CarController.setMaxSpeed (50 + 10 * Random.Range (-1.0f, 1.0f));
-				}
-				Vector3 follow_car_pos = follow_car.transform.position;	
-				compare_start = ListIndex(ClosestWaypoint (follow_car_pos)+waypoint_offset);
-				Vector3 start_pos = waypoints[compare_start].position;
+		//		int waypoint_offset = 0;
+		//		if (forward) 
+		//		{
+		//			waypoint_offset = Random.Range (-3, -1);
+		//			m_CarController.setMaxSpeed (50 + 10 * Random.Range (0.0f, 1.0f));
+		//			int infront_or_behind = Random.Range (0, 2);
+		//			//int infront_or_behind = 0;
+		//			if (infront_or_behind == 1) 
+		//			{
+		//				waypoint_offset = Random.Range (4, 6);
+		//				m_CarController.setMaxSpeed (50 + 10 * Random.Range (-1.0f, 0.0f));
+		//			}
+		//		} 
+		//		else 
+		//		{
+		//			waypoint_offset = Random.Range (3, 7);
+		//			m_CarController.setMaxSpeed (50 + 10 * Random.Range (-1.0f, 1.0f));
+		//		}
+		//		Vector3 follow_car_pos = follow_car.transform.position;	
+		//		compare_start = ListIndex(ClosestWaypoint (follow_car_pos)+waypoint_offset);
+		//		Vector3 start_pos = waypoints[compare_start].position;
 
-				Vector3 start_offset = waypoints [compare_start].right * 2*direction;
-				if (lane == 1)
-				{
-					start_offset = waypoints [compare_start].right * 6*direction;
-				} 
-				else if(lane==2) 
-				{
-					start_offset = waypoints [compare_start].right * 10*direction;
-				}
+		//		Vector3 start_offset = waypoints [compare_start].right * 2*direction;
+		//		if (lane == 1)
+		//		{
+		//			start_offset = waypoints [compare_start].right * 6*direction;
+		//		} 
+		//		else if(lane==2) 
+		//		{
+		//			start_offset = waypoints [compare_start].right * 10*direction;
+		//		}
 
-				spawn_pos = new Vector3 (start_pos.x + start_offset.x, start_pos.y + start_offset.y, start_pos.z + start_offset.z);
+		//		spawn_pos = new Vector3 (start_pos.x + start_offset.x, start_pos.y + start_offset.y, start_pos.z + start_offset.z);
 
-				//make sure there we wont spawn ontop of a existing car
-				foreach (GameObject car in cars) 
-				{
-					if (Vector3.Distance (car.transform.position,spawn_pos) < 6)
-					{
-						spawn_check = false;
-					}
-				}
+		//		//make sure there we wont spawn ontop of a existing car
+		//		foreach (GameObject car in cars) 
+		//		{
+		//			if (Vector3.Distance (car.transform.position,spawn_pos) < 6)
+		//			{
+		//				spawn_check = false;
+		//			}
+		//		}
 			
-				escape_cnt++;
-			}
+		//		escape_cnt++;
+		//	}
 
-			if (escape_cnt < 500) 
-			{
-				staged = false;
+		//	if (escape_cnt < 500) 
+		//	{
+		//		staged = false;
 
-				m_CarController.transform.position = spawn_pos;
+		//		m_CarController.transform.position = spawn_pos;
 
-				m_CarController.transform.rotation = waypoints [compare_start].transform.rotation;
-				if (!forward) {
-					Vector3 rot = m_CarController.transform.rotation.eulerAngles;
-					rot = new Vector3 (rot.x, rot.y + 180, rot.z);
-					m_CarController.transform.rotation = Quaternion.Euler (rot);
-				}
-				m_Rigidbody.velocity = waypoints [compare_start].transform.forward * direction * m_CarController.MaxSpeed;
-				current_waypoint = ListIndex (compare_start);
+		//		m_CarController.transform.rotation = waypoints [compare_start].transform.rotation;
+		//		if (!forward) {
+		//			Vector3 rot = m_CarController.transform.rotation.eulerAngles;
+		//			rot = new Vector3 (rot.x, rot.y + 180, rot.z);
+		//			m_CarController.transform.rotation = Quaternion.Euler (rot);
+		//		}
+		//		m_Rigidbody.velocity = waypoints [compare_start].transform.forward * direction * m_CarController.MaxSpeed;
+		//		current_waypoint = ListIndex (compare_start);
 
-                //Debug.Log("Spawn:: " + name + " at waypoint " + current_waypoint );
-            }
+  //              //Debug.Log("Spawn:: " + name + " at waypoint " + current_waypoint );
+  //          }
 
-			else
-			{
-				Debug.Log ("BAD SPAWN");
-			}
+		//	else
+		//	{
+		//		Debug.Log ("BAD SPAWN");
+		//	}
 
-		}
+		//}
 
 		public int getLane()
 		{
