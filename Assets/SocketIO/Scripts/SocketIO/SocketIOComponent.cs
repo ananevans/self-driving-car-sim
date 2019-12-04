@@ -181,7 +181,10 @@ namespace SocketIO
 
 		public void Close()
 		{
-			EmitClose();
+            #if SOCKET_IO_DEBUG
+                        debugMethod.Invoke("[SocketIO] Close ");
+            #endif
+            EmitClose();
 			connected = false;
 		}
 
