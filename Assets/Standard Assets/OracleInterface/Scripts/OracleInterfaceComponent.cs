@@ -98,10 +98,10 @@ namespace OracleInterface
                     }
                     if (Interlocked.CompareExchange(ref stop, 0, 0) == 0)
                     {
-                        Debug.Log("Empty queue: Waiting");
+                        //Debug.Log("Empty queue: Waiting");
                         threadWaitHandle.WaitOne();
                         threadWaitHandle.Reset();
-                        Debug.Log("Empty queue: Woke Up");
+                        //Debug.Log("Empty queue: Woke Up");
                     }
                 }
                 // empty the queue just in case

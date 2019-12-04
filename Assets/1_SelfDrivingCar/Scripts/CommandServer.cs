@@ -46,13 +46,30 @@ public class CommandServer : MonoBehaviour
 		_socket.On("open", OnOpen);
 		_socket.On("manual", onManual);
 		_socket.On("control", Control);
+        _socket.On("done", OnDone);
 		_carController = Car.GetComponent<CarController>();
 		point_path = Car.GetComponent<perfect_controller>();
 		car_traffic = Car.GetComponent<CarTraffic>();
 
 	}
 
-	void OnOpen(SocketIOEvent obj)
+    void OnDone(SocketIOEvent obj)
+    {
+        Debug.Log("Done message received");
+
+        _socket.Close();
+
+        #if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+           // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+           UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+
+    }
+
+    void OnOpen(SocketIOEvent obj)
 	{
 		Debug.Log("Connection Open");
 		//point_path.OpenScript ();

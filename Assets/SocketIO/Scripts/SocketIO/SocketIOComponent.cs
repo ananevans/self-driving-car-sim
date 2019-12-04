@@ -300,9 +300,9 @@ namespace SocketIO
 		{
 			EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
 			EmitPacket(new Packet(EnginePacketType.CLOSE));
-		}
+        }
 
-		private void EmitPacket(Packet packet)
+        private void EmitPacket(Packet packet)
 		{
 			#if SOCKET_IO_DEBUG
 			debugMethod.Invoke("[SocketIO] " + packet);
